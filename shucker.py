@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import filedialog
 import subprocess
 import os
+import sys
 
 PICTURES = ["png","gif","jpg"]
 VIDEOS = ["mov","mp4","mkv"]
@@ -39,12 +40,12 @@ elif filetypes.get() == "videos":
 elif filetypes.get() == "documents":
 	extensions = DOCUMENTS
 
-btn_execute = Button(master, text="Shuck It!", command= lambda: shuck(extensions, inpath.get(), outpath.get(), chk_dirs))
+btn_execute = Button(master, text="Shuck It!", command= lambda: shuck(extensions, inpath.get(), outpath.get(), opt_keepdirs.get()))
 
 btn_inpath.pack()
 ent_inpath.pack()
 
-chk_dirs.pack()
+#chk_dirs.pack() - TODO: Create separate command for flattening destination to single folder
 dd_filetypes.pack()
 
 btn_outpath.pack()
@@ -61,12 +62,9 @@ def shuck(extensions, inpath, outpath, chk_dirs):
 			sources += extension + "|" #collate filetypes
 	sources = sources[:-1] #cut off the last |
 	command.append(r'".*\.('+sources+')\"')
-	if chk_dirs:
-		flags = "-pdm"
-	else:
-		flags = "-pm"
+	print(chk_dirs)
+	flags = "-pdm"
 	outcmd = ["|","cpio",flags , outpath]
-
 	command.extend(outcmd)
 	command = ' '.join([str(elem) for elem in command])
 	print(command)
